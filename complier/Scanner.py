@@ -1,8 +1,3 @@
-# -*- coding:utf-8 -*-
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-
 import os
 class Scanner:
     def __init__(self, filename, src_filename, Key, Symbol):
@@ -25,11 +20,6 @@ class Scanner:
         self.Dict = {}
         self.sentences = []
         self.strings = []
-        self.calcu = ['+', '-', '*', '/']
-
-    def error(self):
-        print 'error!'
-        sys.exit()
 
     def read(self):
         file = open(self.filename)
@@ -89,89 +79,17 @@ class Scanner:
                     i += 1
                 newword = ''.join(symbol)
                 self.temp_PT.append(newword)
-            elif ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):  # 判断首字母是否是数字
+            elif ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):
                 new_word.append(self.sentences[i])
                 i += 1
-                while ((self.sentences[i] >= '0') and (self.sentences[i] <= '9')):  # 持续判断下一个输入是否为数字
+                while ((self.sentences[i] != ' ') and not (self.sentences[i] in self.Symbol)):
                     new_word.append(self.sentences[i])
                     i += 1
-                if (self.sentences[i] == '.'):  # 判断下一个字符是不是小数点
-                    new_word.append(self.sentences[i])
-                    i += 1
-                    if ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):  # 小数点后的输入是否为数字
-                        new_word.append(self.sentences[i])
-                        i += 1
-                        while ((self.sentences[i] >= '1') and (
-                            self.sentences[i] <= '9')):  # 持续判断下一个输入是否为数字
-                            new_word.append(self.sentences[i])
-                            i += 1
-                        if (self.sentences[i] == 'e'):  # 判断下一个输入是否为e
-                            new_word.append(self.sentences[i])
-                            i += 1
-                            if ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):  # 判断下一个输入是否为数字
-                                new_word.append(self.sentences[i])
-                                i += 1
-                                while ((self.sentences[i] >= '0') and (self.sentences[i] <= '9')):  # 持续判断有没有数字继续输入
-                                    new_word.append(self.sentences[i])
-                                    i += 1
-                                self.judge_false(i)
-                            elif ((self.sentences[i] == '-') or (self.sentences[i] == '+')):  # 判断尾数正负
-                                new_word.append(self.sentences[i])
-                                i += 1
-                                if ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):  # 判断接下来输入的是否为数字
-                                    new_word.append(self.sentences[i])
-                                    i += 1
-                                    while ((self.sentences[i] >= '0') and (self.sentences[i] <= '9')):  # 持续判断后续输入是否是数字
-                                        new_word.append(self.sentences[i])
-                                        i += 1
-                                    self.judge_false(i)
-                                else:
-                                    self.error()
-                            self.judge_false(i)
-                        self.judge_false(i)
-                    else:  # 小数点后不是数字就报错
-                        self.error()
-                elif (self.sentences[i] == 'e'):
-                    new_word.append(self.sentences[i])
-                    i += 1
-                    if ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):
-                        new_word.append(self.sentences[i])
-                        i += 1
-                        while ((self.sentences[i] >= '0') and (self.sentences[i] <= '9')):
-                            new_word.append(self.sentences[i])
-                            i += 1
-                        self.judge_false(i)
-                    elif ((self.sentences[i] == '-') or (self.sentences[i] == '+')):
-                        new_word.append(self.sentences[i])
-                        i += 1
-                        if ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):
-                            new_word.append(self.sentences[i])
-                            i += 1
-                            while ((self.sentences[i] >= '0') and (self.sentences[i] <= '9')):
-                                new_word.append(self.sentences[i])
-                                i += 1
-                                self.judge_false(i)
-                        else:
-                            self.error()
-                    self.judge_false(i)
-                self.judge_false(i)
                 newword = ''.join(new_word)
                 self.temp_CT.append(newword)
             else:
                 i += 1
             self.strings.append(newword)
-
-    def judge_false(self, i):
-        if ((self.sentences[i] >= 'a' and self.sentences[i] <= 'd') or (
-                self.sentences[i] >= 'A' and self.sentences[i] <= 'D')):
-            self.error()  # 下一个输入为字母
-        if ((self.sentences[i] >= 'f' and self.sentences[i] <= 'z') or (
-                self.sentences[i] >= 'F' and self.sentences[i] <= 'Z')):
-            self.error()  # 下一个输入为字母
-        if ((self.sentences[i] in self.calcu) and not (
-            ((self.sentences[i + 1] >= '0') and (self.sentences[i + 1] <= '9')) or self.sentences[i + 1] in self.iT)):
-            self.error()  # 运算符后面不是数字或者变量标识符
-        pass
 
     def delete_duplication(self, array):
         template = []
