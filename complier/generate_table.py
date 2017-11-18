@@ -4,7 +4,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 from Scanner import *
-
+# import test
+from test import *
 class Table:
     def __init__(self):
         self.type_length_dict = {'integer': 4, 'float': 4, 'char': 1}
@@ -13,24 +14,11 @@ class Table:
         filename = 'example.txt'
         src_filename = 'result.txt'
         Key = ['program', 'var', 'integer', 'float', 'char', 'begin', 'end']
-        Symbol = [',', ':', ';', ':=', '*', '/', '+', '-', '.', '(', ')']
+        Symbol = [',', ':', ';', ':=', '*', '/', '+', '-', '.', '(', ')', '<']
         self.Scan = Scanner(filename, src_filename, Key, Symbol)
         self.Scan.output_result()
         self.Scan.Strings = self.Scan.strings[::-1]
-        # select集合
-        # self.select = {'E': {'i': ['E1', 'T'], 'w0': ' ', 'w1': ' ', '(': ['E1', 'T'], ')': ' ', '#': ' '},
-        #           'E1': {'i': ' ', 'w0': ['E1', '{w0}', 'T', 'w0'], 'w1': ' ', '(': ' ', ')': '\x00', '#': ' '},
-        #           'T': {'i': ['T1', 'F'], 'w0': ' ', 'w1': ' ', '(': ['T1', 'F'], ')': ' ', '#': ' '},
-        #           'T1': {'i': ' ', 'w0': '\x00', 'w1': ['T1', '{w1}', 'F', 'w1'], '(': ' ', ')': '\x00', '#': '\x00'},
-        #           'F': {'i': 'i', 'w0': ' ', 'w1': ' ', '(': [')', 'E', '('], ')': ' ', '#': ' '}}
-        # self.end_arrays = ['i', 'w0', 'w1', '(', ')', '#']   #终结符
-        # self.start_arrays = ['E', 'E1', 'T', 'T1', 'F']   #非终结符
-        # self.variable = []
-        # for x in xrange(1, 100):
-        #     self.variable.append('t{}'.format(x))
-        # self.variable = reversed(self.variable)
-        # print self.variable
-
+        self.formula = []
 
     def error(self):
         print 'error!'
@@ -46,7 +34,7 @@ class Table:
         else:
             self.Dict[name]['length'] = ' '
 
-    def Program(self):
+    def Program(self):  #主函数
         word = self.Scan.Strings.pop()
         if (self.Scan.Dict[word] == '04'):
             identify = self.Scan.Strings.pop()   #标识符
@@ -54,6 +42,7 @@ class Table:
                 self.add(identify, self.position, ' ', 'f')   #将符号名字加入符号表中
                 self.position += 1
                 self.Sub_program()
+                self.formula.append(('program', identify, ' ', ' '))
             else:
                 self.error()
         else:
@@ -77,12 +66,11 @@ class Table:
                 self.error()
         else:
             self.error()
-        print self.Dict
+        # print self.Dict
 
 
     def Sub_variable(self):     #自变量声明
         self.variable_list = []
-        self.variable_Dict = {}  # 记录所有定义的变量
         identify = self.Scan.Strings.pop()  # 标识符var
         # print identify
         self.variable_list.append(identify)
@@ -114,14 +102,21 @@ class Table:
                 self.error()
         else:
             self.error()
-        # print self.Dict
+        print self.Dict
 
 
     def Com_sentence(self):
-        word = self.Scan.Strings.pop()
-        if(self.Scan.Dict[word] == '09'):
-            pass
-        else:
-            self.error()
+        # global tableDict=self.Dict
+        # global ScanDict=self.Scan.Dict
+        # global ScanStr=self.Scan.Strings
+        # quaternions=test.getQuaternions()
+    # word = self.Scan.Strings.pop()
+    #     if(self.Scan.Dict[word] == '09'):
+    #         pass
+    #     else:
+    #         self.error()
+        pass
+
 
 Table().Program()
+print Table().Scan.Strings

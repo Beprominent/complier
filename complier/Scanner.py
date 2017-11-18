@@ -1,4 +1,9 @@
+# -*- coding:utf-8 -*-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 import os
+
 class Scanner:
     def __init__(self, filename, src_filename, Key, Symbol):
         self.filename = filename
@@ -20,6 +25,8 @@ class Scanner:
         self.Dict = {}
         self.sentences = []
         self.strings = []
+        self.calcu = ['+', '-', '*', '/']
+        self.nw = []
 
     def read(self):
         file = open(self.filename)
@@ -79,17 +86,95 @@ class Scanner:
                     i += 1
                 newword = ''.join(symbol)
                 self.temp_PT.append(newword)
-            elif ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):
+            elif ((self.sentences[i] >= '1') and (self.sentences[i] <= '9')):  # 切割出单词
                 new_word.append(self.sentences[i])
                 i += 1
-                while ((self.sentences[i] != ' ') and not (self.sentences[i] in self.Symbol)):
+                while ((self.sentences[i] != ' ') and not (((self.sentences[i] in self.calcu) and (self.sentences[i - 1] != 'e')) or self.sentences[i] == ';')):
                     new_word.append(self.sentences[i])
                     i += 1
+                self.nw = new_word
+                self.judge_false()
                 newword = ''.join(new_word)
                 self.temp_CT.append(newword)
             else:
                 i += 1
             self.strings.append(newword)
+
+    def error(self):
+        print 'error!'
+        sys.exit()
+
+    def judge_false(self):  #判断分的词是不是常数
+        self.longth = len(self.nw)
+        k = 0
+        while k <= self.longth - 1:
+            if ((self.nw[k] >= '1') and (self.nw[k] <= '9')):
+                k = k + 1
+                while (k <= self.longth - 1):
+                    if ((self.nw[k] >= '0') and (self.nw[k] <= '9')):
+                        k = k + 1
+                        continue
+                    elif (self.nw[k] == '.'):
+                        k = k + 1
+                        if (k == self.longth):
+                            self.error()
+                        elif ((self.nw[k] >= '0') and (self.nw[k] <= '9')):
+                            k = k + 1
+                            while (k <= self.longth - 1):
+                                if ((self.nw[k] >= '1') and (self.nw[k] <= '9')):
+                                    k = k + 1
+                                    continue
+                                elif (self.nw[k] == 'e'):
+                                    k = k + 1
+                                    if (k == self.longth):
+                                        self.error()
+                                    elif (k == self.longth):
+                                        self.error()
+                                    elif ((self.nw[k] == '+') or (self.nw[k] == '-')):
+                                        k = k + 1
+                                        if (k == self.longth):
+                                            self.error()
+                                        elif (k == self.longth):
+                                            self.error()
+                                        elif ((self.nw[k] >= '1') and (self.nw[k] <= '9')):
+                                            k = k + 1
+                                            while (k <= self.longth - 1):
+                                                if ((self.nw[k] >= '0') and (self.nw[k] <= '9')):
+                                                    k = k + 1
+                                                    continue
+                                                else:
+                                                    self.error()
+                                        else:
+                                            self.error()
+                                    else:
+                                        self.error()
+                                else:
+                                    self.error()
+                        else:
+                            self.error()
+                    elif (self.nw[k] == 'e'):
+                        k = k + 1
+                        if (k == self.longth):
+                            self.error()
+                        elif ((self.nw[k] == '+') and (self.nw[k] == '-')):
+                            k = k + 1
+                            if (k == self.longth):
+                                self.error()
+                            elif ((self.nw[k] >= '1') and (self.nw[k] <= '9')):
+                                k = k + 1
+                                while (k <= self.longth - 1):
+                                    if ((self.nw[k] >= '0') and (self.nw[k] <= '9')):
+                                        k = k + 1
+                                        continue
+                                    else:
+                                        self.error()
+                            else:
+                                self.error()
+                        else:
+                            self.error()
+                    else:
+                        self.error()
+        pass
 
     def delete_duplication(self, array):
         template = []

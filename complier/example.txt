@@ -1,6 +1,7 @@
 program example
-  var a,b,d:integer;c:float;
+  var a,b:integer; c: float;
   begin:
-    a:=2;
-    b:=2*5+a;
+    a := 2;
+    b := 4*5+a;
+    c := 12.5e-45;
   end.
